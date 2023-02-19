@@ -10,10 +10,10 @@ public class PlayerController : MonoBehaviour
     [Range(0,50)]
     [SerializeField] float Speed = 10f;
     [SerializeField] float MoveSpeed = 10f; //速度
-    [SerializeField] float MoveRange = 40f; //操作範囲
+    [SerializeField] Vector2 MoveRange = new Vector2(40.0f,40.0f); //操作範囲
 
    IEnumerator Move()
-    {
+   {
         var prevPointPos = transform.position;
         var basePosition = transform.position;
         var movedPos = Vector2.zero;
@@ -35,14 +35,15 @@ public class PlayerController : MonoBehaviour
                 // 行列によるベクトルの変換
                 movedPos.x += Input.GetAxis("Horizontal") * MoveSpeed * Time.deltaTime;
                 movedPos.y += Input.GetAxis("Vertical") * MoveSpeed * Time.deltaTime;
-                movedPos = Vector2.ClampMagnitude(movedPos, MoveRange);
+                movedPos = Vector2.ClampMagnitude(movedPos, MoveRange.x);
+                movedPos = Vector2.ClampMagnitude(movedPos, MoveRange.y);
                 var worldMovePos = Matrix4x4.Rotate(transform.rotation).MultiplyVector(movedPos);
 
                 //ルート上の位置に上下左右の移動量を加えている
                 transform.position = basePosition + worldMovePos;
 
                 //次の処理では進行方向を向くように計算している
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(vec, Vector3.up), 0.5f);
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(vec,Vector2.zero), 0.5f);
 
                 yield return null;
             }

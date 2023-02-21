@@ -7,11 +7,16 @@ public class PlayerController : MonoBehaviour
     [Header("ポイント地点"), SerializeField] Transform[] RoutePoints;
     bool _isHitRoutePoint;
 
-    [Range(0,50)]
+    [Range(0,200)]
     [SerializeField] float Speed = 10f;
-    [SerializeField] float MoveSpeed = 10f; //速度
-    [SerializeField] Vector2 MoveRange = new Vector2(40.0f,40.0f); //操作範囲
+    [SerializeField] float Xlimit = 8.5f;
+    [SerializeField] float Ylimit = 4.5f;
 
+    [Range(0,200)]
+    [SerializeField] float MoveSpeed = 10f; //速度
+    [SerializeField] float MoveRange = 40f; //操作範囲
+
+    int count = 0;
    IEnumerator Move()
    {
         var prevPointPos = transform.position;
@@ -21,7 +26,6 @@ public class PlayerController : MonoBehaviour
         foreach(var nextPoint in RoutePoints)
         {
             _isHitRoutePoint = false;
-
             while (!_isHitRoutePoint)
             {
                 //進行方向の計算
@@ -32,18 +36,17 @@ public class PlayerController : MonoBehaviour
                 basePosition += vec * Speed * Time.deltaTime;
 
                 //上下左右に移動する処理
-                // 行列によるベクトルの変換
+                //行列によるベクトルの変換
                 movedPos.x += Input.GetAxis("Horizontal") * MoveSpeed * Time.deltaTime;
                 movedPos.y += Input.GetAxis("Vertical") * MoveSpeed * Time.deltaTime;
-                movedPos = Vector2.ClampMagnitude(movedPos, MoveRange.x);
-                movedPos = Vector2.ClampMagnitude(movedPos, MoveRange.y);
+                movedPos = Vector2.ClampMagnitude(movedPos, MoveRange);
                 var worldMovePos = Matrix4x4.Rotate(transform.rotation).MultiplyVector(movedPos);
 
                 //ルート上の位置に上下左右の移動量を加えている
                 transform.position = basePosition + worldMovePos;
 
                 //次の処理では進行方向を向くように計算している
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(vec,Vector2.zero), 0.5f);
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(vec, Vector3.up), 0.1f);
 
                 yield return null;
             }
@@ -57,11 +60,27 @@ public class PlayerController : MonoBehaviour
         {
             collider.gameObject.SetActive(false);
             _isHitRoutePoint = true;
+            count++;
         }
     }
 
     void Start()
     {
         StartCoroutine(Move());
+    }
+    void Update()
+    {
+        if (count == 6)
+        {
+            float x = Input.GetAxis("Horizontal") * Speed * Time.deltaTime;
+            float y = Input.GetAxis("Vertical") * Speed * Time.deltaTime;
+            transform.Translate(new Vector3(x, y, 0));
+
+            Vector3 currentPos = transform.position;
+            currentPos.x = Mathf.Clamp(currentPos.x, -Xlimit, Xlimit);
+            currentPos.y = Mathf.Clamp(currentPos.y, -Ylimit, Ylimit);
+
+            transform.position = currentPos;
+        }  
     }
 }

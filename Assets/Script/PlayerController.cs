@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float Speed = 10f;
     [SerializeField] float Xlimit = 8.5f;
     [SerializeField] float Ylimit = 4.5f;
+    [SerializeField] float Zlimit = 168.0f;
 
     [Range(0,200)]
     [SerializeField] float MoveSpeed = 10f; //‘¬“x
@@ -72,13 +73,14 @@ public class PlayerController : MonoBehaviour
     {
         if (count == 6)
         {
-            float x = Input.GetAxis("Horizontal") * Speed * Time.deltaTime;
-            float y = Input.GetAxis("Vertical") * Speed * Time.deltaTime;
+            float x = Input.GetAxis("Horizontal") * MoveSpeed * Time.deltaTime;
+            float y = Input.GetAxis("Vertical") * MoveSpeed * Time.deltaTime;
             transform.Translate(new Vector3(x, y, 0));
 
             Vector3 currentPos = transform.position;
             currentPos.x = Mathf.Clamp(currentPos.x, -Xlimit, Xlimit);
             currentPos.y = Mathf.Clamp(currentPos.y, -Ylimit, Ylimit);
+            currentPos.z = Mathf.Clamp(currentPos.z, -Zlimit, Zlimit);
 
             transform.position = currentPos;
         }  

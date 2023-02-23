@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,6 +17,12 @@ public class PlayerController : MonoBehaviour
     [Range(0,200)]
     [SerializeField] float MoveSpeed = 10f; //ë¨ìx
     [SerializeField] float MoveRange = 40f; //ëÄçÏîÕàÕ
+
+    public float _initialLife = 100;
+    public float Life = 100;
+    public Image LifeGage;
+
+    [SerializeField] BulletController bulletpre;
 
     int count = 0;
    IEnumerator Move()
@@ -57,11 +64,27 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        if(collider.gameObject.tag == "RoutePoint")
+        if (collider.gameObject.tag == "RoutePoint")
         {
             collider.gameObject.SetActive(false);
             _isHitRoutePoint = true;
             count++;
+        }
+        else if (collider.gameObject.tag == "Enemy")
+        {
+            Life -= 10f;
+            LifeGage.fillAmount = Life / _initialLife;
+
+            collider.gameObject.SetActive(false);
+            Destroy(collider.gameObject);
+
+            if (Life <= 0)
+            {
+                Camera.main.transform.SetParent(null);
+                gameObject.SetActive(false);
+                var sceneManager = FindObjectOfType<SceneManager>();
+                sceneManager.ShowGameOver();
+            }
         }
     }
 
@@ -84,5 +107,25 @@ public class PlayerController : MonoBehaviour
 
             transform.position = currentPos;
         }  
+    }
+
+    public void ShotBullet(Vector3 targetpos)
+    {
+        var bullet = Instantiate(bulletpre, transform.position, Quaternion.identity);
+        bullet.Init(transform.position, targetpos);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "BackGround")
+        {
+            Life = 0;
+            LifeGage.fillAmount = Life / _initialLife;
+
+            Camera.main.transform.SetParent(null);
+            gameObject.SetActive(false);
+            var sceneManager = FindObjectOfType<SceneManager>();
+            sceneManager.ShowGameOver();
+        }
     }
 }

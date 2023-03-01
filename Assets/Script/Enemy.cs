@@ -10,15 +10,25 @@ public class Enemy : MonoBehaviour
     [SerializeField] int Life = 10;
 
     float _time;
-    PlayerController _player;
+    float _bulletime = 1.0f;
+    [SerializeField] PlayerController _player;
+    [SerializeField] GameObject bullet;
+    [SerializeField] Transform muzzle;
     void Start()
     {
         _time = 0f;
-        _player = FindObjectOfType<PlayerController>();
     }
 
     void Update()
     {
+        transform.LookAt(_player.transform);
+        _bulletime -= Time.deltaTime;
+        if(_time <= 0)
+        {
+            Instantiate(bullet, muzzle.transform.position, Quaternion.identity);
+            _time = 1.0f;
+        }
+
         _time += Time.deltaTime;
         if(_time > DeadSecond)
         {
@@ -30,7 +40,6 @@ public class Enemy : MonoBehaviour
             transform.position += vec.normalized * Speed * Time.deltaTime;
         }
     }
-
     private void OnMouseUpAsButton()
     {
         _player.ShotBullet(transform.position);
@@ -42,7 +51,7 @@ public class Enemy : MonoBehaviour
         if(collider.gameObject.tag == "Bullet")
         {
             Life -= 10;
-            if(Life <= 0)
+            if(Life == 0)
             {
                 Destroy(gameObject);
                 var sceneManager = FindObjectOfType<SceneManager>();

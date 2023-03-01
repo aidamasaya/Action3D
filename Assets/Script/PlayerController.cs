@@ -18,9 +18,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float MoveSpeed = 10f; //‘¬“x
     [SerializeField] float MoveRange = 40f; //‘€ì”ÍˆÍ
 
-    public float _initialLife = 100;
-    public float Life = 100;
-    public Image LifeGage;
+    [SerializeField] float _initialLife = 100;
+    [SerializeField] float Life = 100;
+    [SerializeField] Image LifeGage;
 
     [SerializeField] BulletController bulletpre;
 

@@ -148,6 +148,10 @@ MonoBehaviour:
   Zlimit: 168
   MoveSpeed: 100
   MoveRange: 100
+  _initialLife: 100
+  Life: 100
+  LifeGage: {fileID: 0}
+  bulletpre: {fileID: 0}
 --- !u!54 &1051924458428093042
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -163,7 +167,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 16
-  m_CollisionDetection: 2
+  m_CollisionDetection: 0
 --- !u!135 &1051924458428093043
 SphereCollider:
   m_ObjectHideFlags: 0

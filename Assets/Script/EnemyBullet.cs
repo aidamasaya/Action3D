@@ -6,15 +6,16 @@ public class EnemyBullet : MonoBehaviour
 {
     [SerializeField] float _speed = 10f;
     float lifetime = 3f;
-    PlayerController _player;
     Rigidbody _rb;
-    void Start()
+    void Update()
     {
+        Debug.Log("Shoot");
+        GameObject _player = GameObject.FindGameObjectWithTag("Player");
+        Vector3 vec = _player.transform.position - transform.position;
+        vec = vec.normalized * _speed;
+
         _rb = GetComponent<Rigidbody>();
-        Debug.Log("bullet");
-        _player = FindObjectOfType<PlayerController>();
-        var vec = _player.transform.position - transform.position;
-        transform.position +=  vec * _speed * Time.deltaTime;
+        _rb.velocity = vec;
         Destroy(this.gameObject, lifetime);
     }
 }

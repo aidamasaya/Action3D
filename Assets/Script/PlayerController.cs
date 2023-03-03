@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
             _isHitRoutePoint = true;
             count++;
         }
-        else if (collider.gameObject.tag == "Enemy")
+        else if (collider.gameObject.tag == "Enemy" || collider.gameObject.tag == "EnemyBullet")
         {
             Life -= 10f;
             LifeGage.fillAmount = Life / _initialLife;
@@ -120,12 +120,15 @@ public class PlayerController : MonoBehaviour
         if(collision.gameObject.tag == "BackGround")
         {
             Life = 0;
-            LifeGage.fillAmount = Life / _initialLife;
+            LifeGage.gameObject.SetActive(false);
 
-            Camera.main.transform.SetParent(null);
-            gameObject.SetActive(false);
-            var sceneManager = FindObjectOfType<SceneManager>();
-            sceneManager.ShowGameOver();
+            if (Life <= 0)
+            {
+                Camera.main.transform.SetParent(null);
+                gameObject.SetActive(false);
+                var sceneManager = FindObjectOfType<SceneManager>();
+                sceneManager.ShowGameOver();
+            }
         }
     }
 }

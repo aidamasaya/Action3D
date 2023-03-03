@@ -5,12 +5,12 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [Range(0, 100)]
-    [SerializeField] float Speed = 10f;
-    [SerializeField] float DeadSecond = 10f;
+    [SerializeField] public float Speed = 10f;
+    [SerializeField] public float DeadSecond = 10f;
     [SerializeField] int Life = 10;
 
-    float _time;
-    float _bulletime = 1.0f;
+    public float _time;
+    public float _bulletime = 1.0f;
     [SerializeField] PlayerController _player;
     [SerializeField] GameObject bullet;
     [SerializeField] Transform muzzle;
@@ -23,16 +23,16 @@ public class Enemy : MonoBehaviour
     {
         transform.LookAt(_player.transform);
         _bulletime -= Time.deltaTime;
-        if(_time <= 0)
+        if(_bulletime <= 0)
         {
-            Instantiate(bullet, muzzle.transform.position, Quaternion.identity);
-            _time = 1.0f;
+            BallShot();
+            _bulletime = 1.0f;
         }
 
         _time += Time.deltaTime;
         if(_time > DeadSecond)
         {
-           Destroy(gameObject);
+           this.gameObject.SetActive(false);
         }
         else
         {
@@ -40,6 +40,15 @@ public class Enemy : MonoBehaviour
             transform.position += vec.normalized * Speed * Time.deltaTime;
         }
     }
+    public virtual void BallShot()
+    {
+        float lifetime = 3.0f; 
+        GameObject shotobj = Instantiate(bullet, muzzle.position, Quaternion.identity);
+        shotobj.GetComponent<Rigidbody>().velocity = _player.transform.position - shotobj.transform.position;
+        Destroy(shotobj,lifetime);
+    }
+
+
     private void OnMouseUpAsButton()
     {
         _player.ShotBullet(transform.position);

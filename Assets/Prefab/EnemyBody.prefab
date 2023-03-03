@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 5694840260244999474}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -12.431567, y: -1.9967985, z: 288.50406}
-  m_LocalScale: {x: 19.05, y: 15.17, z: 1}
+  m_LocalScale: {x: 19.05, y: 15.17, z: 18.64}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6687054504233062616}
@@ -132,6 +132,9 @@ MonoBehaviour:
   Speed: 10
   DeadSecond: 10
   Life: 30
+  _time: 0
+  _bulletime: 1
+  _player: {fileID: 0}
   bullet: {fileID: 0}
   muzzle: {fileID: 6687054504233062616}
 --- !u!1 &7771833358805098027

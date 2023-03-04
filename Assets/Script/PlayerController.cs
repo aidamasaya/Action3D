@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
     [Range(0,200)]
     [SerializeField] float MoveSpeed = 10f; //ë¨ìx
-    [SerializeField] float MoveRange = 40f; //ëÄçÏîÕàÕ
+    [SerializeField] float MoveRange = 5.0f; //ëÄçÏîÕàÕ
 
     [SerializeField] float _initialLife = 100;
     [SerializeField] float Life = 100;
@@ -25,7 +25,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] BulletController bulletpre;
 
     int count = 0;
-   IEnumerator Move()
+
+    IEnumerator Move()
    {
         var prevPointPos = transform.position;
         var basePosition = transform.position;
@@ -87,11 +88,11 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
     void Start()
     {
         StartCoroutine(Move());
     }
+
     void Update()
     {
         if (count == 6)
@@ -101,8 +102,8 @@ public class PlayerController : MonoBehaviour
             transform.Translate(new Vector3(x, y, 0));
 
             Vector3 currentPos = transform.position;
-            currentPos.x = Mathf.Clamp(currentPos.x, -Xlimit, Xlimit);
-            currentPos.y = Mathf.Clamp(currentPos.y, -Ylimit, Ylimit);
+            currentPos.x = Mathf.Clamp(currentPos.x, -Xlimit + Xlimit, Xlimit);
+            currentPos.y = Mathf.Clamp(currentPos.y, -Ylimit + 80, Ylimit);
             currentPos.z = Mathf.Clamp(currentPos.z, -Zlimit, Zlimit);
 
             transform.position = currentPos;
@@ -119,7 +120,7 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.gameObject.tag == "BackGround")
         {
-            Life = 0;
+            Life -= 10;
             LifeGage.gameObject.SetActive(false);
 
             if (Life <= 0)

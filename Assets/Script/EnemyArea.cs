@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// 敵や障害物のアクティブを制御するコンポーネント
+/// </summary>
 public class EnemyArea : MonoBehaviour
 {
     public GameObject[] EnemyList;

@@ -48,7 +48,6 @@ public class Enemy : MonoBehaviour
         Destroy(shotobj,lifetime);
     }
 
-
     private void OnMouseUpAsButton()
     {
         _player.ShotBullet(transform.position);

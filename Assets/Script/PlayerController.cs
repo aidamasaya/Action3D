@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
 
     int count = 0;
 
+    [SerializeField] GameObject _boss;
     IEnumerator Move()
    {
         var prevPointPos = transform.position;
@@ -104,7 +105,7 @@ public class PlayerController : MonoBehaviour
             Vector3 currentPos = transform.position;
             currentPos.x = Mathf.Clamp(currentPos.x, -Xlimit + Xlimit, Xlimit);
             currentPos.y = Mathf.Clamp(currentPos.y, -Ylimit + 80, Ylimit);
-            currentPos.z = Mathf.Clamp(currentPos.z, -Zlimit, Zlimit);
+            currentPos.z = Mathf.Clamp(currentPos.z, Zlimit, Zlimit);
 
             transform.position = currentPos;
         }  
@@ -121,10 +122,10 @@ public class PlayerController : MonoBehaviour
         if(collision.gameObject.tag == "BackGround")
         {
             Life -= 10;
-            LifeGage.gameObject.SetActive(false);
 
             if (Life <= 0)
             {
+                LifeGage.gameObject.SetActive(false);
                 Camera.main.transform.SetParent(null);
                 gameObject.SetActive(false);
                 var sceneManager = FindObjectOfType<SceneManager>();

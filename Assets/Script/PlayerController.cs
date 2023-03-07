@@ -18,16 +18,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float MoveSpeed = 10f; //ë¨ìx
     [SerializeField] float MoveRange = 5.0f; //ëÄçÏîÕàÕ
 
-    [SerializeField] float _initialLife = 100;
-    [SerializeField] float Life = 100;
-    [SerializeField] Image LifeGage;
+    [SerializeField] public float _initialLife = 100;
+    [SerializeField] public float _Life = 100;
 
     [SerializeField] BulletController bulletpre;
 
     int count = 0;
-
-    [SerializeField] GameObject _boss;
-    IEnumerator Move()
+    AnimationHPBar _animHP;
+   IEnumerator Move()
    {
         var prevPointPos = transform.position;
         var basePosition = transform.position;
@@ -74,15 +72,30 @@ public class PlayerController : MonoBehaviour
         }
         else if (collider.gameObject.tag == "Enemy" || collider.gameObject.tag == "EnemyBullet")
         {
-            Life -= 10f;
-            LifeGage.fillAmount = Life / _initialLife;
+            _animHP.GaugeReduction(10);
+            _Life -= 10f;
 
             collider.gameObject.SetActive(false);
             Destroy(collider.gameObject);
 
-            if (Life <= 0)
+            if (_Life <= 0)
             {
                 Camera.main.transform.SetParent(null);
+                gameObject.SetActive(false);
+                var sceneManager = FindObjectOfType<SceneManager>();
+                sceneManager.ShowGameOver();
+            }
+        }
+
+        if (collider.gameObject.tag == "BackGround")
+        {
+            _animHP.GaugeReduction(10);
+            _Life -= 10;
+
+            if (_Life <= 0)
+            {
+                Camera.main.transform.SetParent(null);
+                _animHP.gameObject.SetActive(false);
                 gameObject.SetActive(false);
                 var sceneManager = FindObjectOfType<SceneManager>();
                 sceneManager.ShowGameOver();
@@ -92,6 +105,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         StartCoroutine(Move());
+        _animHP = GetComponent<AnimationHPBar>();
+        _animHP.SetPlayer(this);
     }
 
     void Update()
@@ -110,27 +125,9 @@ public class PlayerController : MonoBehaviour
             transform.position = currentPos;
         }  
     }
-
     public void ShotBullet(Vector3 targetpos)
     {
         var bullet = Instantiate(bulletpre, transform.position, Quaternion.identity);
         bullet.Init(transform.position, targetpos);
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if(collision.gameObject.tag == "BackGround")
-        {
-            Life -= 10;
-
-            if (Life <= 0)
-            {
-                LifeGage.gameObject.SetActive(false);
-                Camera.main.transform.SetParent(null);
-                gameObject.SetActive(false);
-                var sceneManager = FindObjectOfType<SceneManager>();
-                sceneManager.ShowGameOver();
-            }
-        }
     }
 }

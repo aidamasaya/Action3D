@@ -5,7 +5,7 @@ using UnityEngine;
 public class FallRaser : MonoBehaviour
 {
     Rigidbody _rb;
-    float _gravity = 5.0f;
+    float _gravity = 4.0f;
     Vector3 _vec = new Vector3(0, 0, 0);
     float _lifetime = 3.0f;
     void Start()

@@ -7,7 +7,7 @@ public class Enemy : MonoBehaviour
     [Range(0, 100)]
     [SerializeField] public float Speed = 10f;
     [SerializeField] public float DeadSecond = 10f;
-    [SerializeField] int Life = 10;
+    [SerializeField] public int Life = 10;
 
     public float _time;
     public float _bulletime = 1.0f;
@@ -21,6 +21,10 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        /*if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _player.ShotBullet(transform.position);
+        }*/
         transform.LookAt(_player.transform);
         _bulletime -= Time.deltaTime;
         if(_bulletime <= 0)
@@ -61,10 +65,11 @@ public class Enemy : MonoBehaviour
             Life -= 10;
             if(Life == 0)
             {
-                Destroy(gameObject);
+                Destroy(this.gameObject);
                 var sceneManager = FindObjectOfType<SceneManager>();
                 sceneManager.AddScore(1000);
             }
+            Destroy(collider.gameObject);
         }
     }
 }

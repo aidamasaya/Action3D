@@ -85,17 +85,14 @@ public class BossController : MonoBehaviour
         {
             //敵のやられたときのアニメーション
             gameObject.SetActive(false);
-            var sceneManager = FindObjectOfType<SceneManager>();
-            sceneManager.AddScore(10000);
+            var score = Object.FindObjectOfType<AddScoreController>();
+            score.AddScore(10000);
         }
     }
     private void OnMouseUpAsButton()
     {
-        if (_HP >= 200)
-        {
-            _player.ShotBullet(transform.position);
-            Debug.Log("Shoot");
-        }
+        _player.ShotBullet(transform.position);
+        Debug.Log("Shoot");
     }
 
     void RaserBeam()
@@ -117,8 +114,8 @@ public class BossController : MonoBehaviour
        if(collision.gameObject.tag == "Bullet")
         {
             _HP -= 10;
-            var sceneManager = FindObjectOfType<SceneManager>();
-            sceneManager.AddScore(1000);
+            var score = Object.FindObjectOfType<AddScoreController>();
+            score.AddScore(1000);
             Destroy(collision.gameObject);
         } 
     }

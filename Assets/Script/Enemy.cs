@@ -63,11 +63,11 @@ public class Enemy : MonoBehaviour
         if(collider.gameObject.tag == "Bullet")
         {
             Life -= 10;
-            if(Life == 0)
+            var score = Object.FindObjectOfType<AddScoreController>();
+            score.AddScore(1000);
+            if (Life == 0)
             {
                 Destroy(this.gameObject);
-                var sceneManager = FindObjectOfType<SceneManager>();
-                sceneManager.AddScore(1000);
             }
             Destroy(collider.gameObject);
         }

@@ -69,8 +69,8 @@ public class BossParts : MonoBehaviour
             if (_HP > 0)
             {
                 _HP -= 10;
-                var sceneManager = FindObjectOfType<SceneManager>();
-                sceneManager.AddScore(1000);
+                var score = Object.FindObjectOfType<AddScoreController>();
+                score.AddScore(1000);
             }
             else if(_HP <= 0)
             {

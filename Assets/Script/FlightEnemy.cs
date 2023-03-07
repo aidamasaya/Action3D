@@ -20,18 +20,4 @@ public class FlightEnemy : Enemy
         Destroy(bullet,lifetime);
     }
   }
-    private void OnTriggerEnter(Collider collider)
-    {
-        if (collider.gameObject.tag == "Bullet")
-        {
-            Life -= 10;
-            if (Life == 0)
-            {
-                Destroy(this.gameObject);
-                var sceneManager = FindObjectOfType<SceneManager>();
-                sceneManager.AddScore(1000);
-            }
-            Destroy(collider.gameObject);
-        }
-    }
 }

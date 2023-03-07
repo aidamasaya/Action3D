@@ -9,6 +9,7 @@ TagManager:
   - Bullet
   - BackGround
   - EnemyBullet
+  - Scene
   layers:
   - Default
   - TransparentFX

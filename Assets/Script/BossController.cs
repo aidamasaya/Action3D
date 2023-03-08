@@ -16,8 +16,10 @@ public class BossController : MonoBehaviour
     [SerializeField] List<Transform> _muzzles = new List<Transform>();
     [SerializeField] List<GameObject> _bullets = new List<GameObject>();
     [SerializeField] BossParts[] _parts = new BossParts[3];
+    Material _material;
     void Start()
     {
+        _material = GetComponent<Material>();
         _ran.Add(0);
         _ran.Add(1);
         _ran.Add(2);

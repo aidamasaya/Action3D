@@ -12,20 +12,29 @@ public class BossParts : MonoBehaviour
     public BoxCollider _box;
     float _timer = 2.0f;
     float _limit = 0.0f;
+   public  Renderer _color;
     void Start()
     {
+        _color = GetComponent<Renderer>();
         _box = GetComponent<BoxCollider>();
     }
 
    
     void Update()
     {
+        if(_HP <= 0)
+        {
+            _color.material.color = Color.red;
+            return;
+        }
+
         if (_box.enabled && _HP > 0)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            _color.material.color = Color.yellow;
+            /*if (Input.GetKeyDown(KeyCode.Space))
             {
                 _player.ShotBullet(transform.position);
-            }
+            }*/
             Debug.Log(_box.enabled);
             _timer -= Time.deltaTime;
             if (_timer <= _limit)
@@ -50,6 +59,7 @@ public class BossParts : MonoBehaviour
         }
         else
         {
+            _color.material.color = Color.gray;
             Debug.Log(_box.enabled);
         }
     }

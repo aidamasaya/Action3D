@@ -88,14 +88,15 @@ public class PlayerController : MonoBehaviour
         }
 
         if (collider.gameObject.tag == "BackGround")
-        {
+        {   
             _animHP.GaugeReduction(10);
-            _Life -= 10;
+            _Life = 0;
 
             if (_Life <= 0)
             {
                 Camera.main.transform.SetParent(null);
-                _animHP.gameObject.SetActive(false);
+                _animHP.GreenGauge.gameObject.SetActive(false);
+                _animHP.RedGauge.gameObject.SetActive(false);
                 gameObject.SetActive(false);
                 var sceneManager = FindObjectOfType<SceneManager>();
                 sceneManager.ShowGameOver();
@@ -111,6 +112,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+
         if (count == 6)
         {
             float x = Input.GetAxis("Horizontal") * MoveSpeed * Time.deltaTime;

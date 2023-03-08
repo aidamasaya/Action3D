@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class AnimationHPBar : MonoBehaviour
 {
-    [SerializeField] Image GreenGauge;
-    [SerializeField] Image RedGauge;
+    [SerializeField] public Image GreenGauge;
+    [SerializeField] public Image RedGauge;
 
     PlayerController _player;
     Tween redGaugeTween;

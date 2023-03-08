@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
             {
                 Camera.main.transform.SetParent(null);
                 gameObject.SetActive(false);
-                var sceneManager = FindObjectOfType<SceneManager>();
+                var sceneManager = FindObjectOfType<GameManager>();
                 sceneManager.ShowGameOver();
             }
         }
@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour
                 _animHP.GreenGauge.gameObject.SetActive(false);
                 _animHP.RedGauge.gameObject.SetActive(false);
                 gameObject.SetActive(false);
-                var sceneManager = FindObjectOfType<SceneManager>();
+                var sceneManager = FindObjectOfType<GameManager>();
                 sceneManager.ShowGameOver();
             }
         }

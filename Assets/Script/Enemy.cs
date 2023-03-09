@@ -14,6 +14,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] PlayerController _player;
     [SerializeField] GameObject bullet;
     [SerializeField] Transform muzzle;
+    [SerializeField] AddScoreController _addScore;
     void Start()
     {
         _time = 0f;
@@ -63,8 +64,7 @@ public class Enemy : MonoBehaviour
         if(collider.gameObject.tag == "Bullet")
         {
             Life -= 10;
-            var score = Object.FindObjectOfType<AddScoreController>();
-            score.AddScore(1000);
+            _addScore.AddScore(1000);
             if (Life == 0)
             {
                 Destroy(this.gameObject);

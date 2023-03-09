@@ -12,7 +12,8 @@ public class BossParts : MonoBehaviour
     public BoxCollider _box;
     float _timer = 2.0f;
     float _limit = 0.0f;
-   public  Renderer _color;
+    Renderer _color;
+    [SerializeField] AddScoreController _addScore;
     void Start()
     {
         _color = GetComponent<Renderer>();
@@ -79,8 +80,7 @@ public class BossParts : MonoBehaviour
             if (_HP > 0)
             {
                 _HP -= 10;
-                var score = Object.FindObjectOfType<AddScoreController>();
-                score.AddScore(1000);
+                _addScore.AddScore(1000);
             }
             else if(_HP <= 0)
             {

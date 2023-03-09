@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using UniRx.Triggers;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UniRx;
 /// <summary>
 /// ボスコンポーネント。一定時間たつと攻撃する所が変わる、HPが0になったら消える
 /// </summary>
 public class BossController : MonoBehaviour
 {
     [SerializeField] int _HP = 400;
-    float _currentTime = 8.0f;
+    float _currentTime = 3.0f;
     float _stateTime = 0.0f;
     List<int> _ran = new List<int>();
     int _random = 0;
@@ -16,7 +19,9 @@ public class BossController : MonoBehaviour
     [SerializeField] List<Transform> _muzzles = new List<Transform>();
     [SerializeField] List<GameObject> _bullets = new List<GameObject>();
     [SerializeField] BossParts[] _parts = new BossParts[3];
+    [SerializeField] AddScoreController _addScore;
     Material _material;
+    [SerializeField] GameManager _manager;
     void Start()
     {
         _material = GetComponent<Material>();
@@ -37,7 +42,7 @@ public class BossController : MonoBehaviour
             {
                 _random = Random.Range(_ran[0],_ran[3]);
                 Debug.Log(_ran);
-                _currentTime = 4.0f;
+                _currentTime = 3.0f;
             }
 
             switch (_random)
@@ -85,10 +90,9 @@ public class BossController : MonoBehaviour
 
         if(_HP <= 0)
         {
-            //敵のやられたときのアニメーション
             gameObject.SetActive(false);
-            var score = Object.FindObjectOfType<AddScoreController>();
-            score.AddScore(10000);
+            _addScore.AddScore(10000);
+            Invoke("Call", 3f);
         }
     }
     private void OnMouseUpAsButton()
@@ -113,12 +117,16 @@ public class BossController : MonoBehaviour
     }
     void OnTriggerEnter(Collider collision)
     {
-       if(collision.gameObject.tag == "Bullet")
+        if (collision.gameObject.tag == "Bullet")
         {
             _HP -= 10;
-            var score = Object.FindObjectOfType<AddScoreController>();
-            score.AddScore(1000);
+            _addScore.AddScore(1000);
             Destroy(collision.gameObject);
-        } 
+        }
+    }
+
+    void Call()
+    {
+        _manager.Finish();
     }
 }

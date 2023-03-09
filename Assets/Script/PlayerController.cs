@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
+using UniRx.Triggers;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -25,13 +28,27 @@ public class PlayerController : MonoBehaviour
 
     int count = 0;
     AnimationHPBar _animHP;
-   IEnumerator Move()
+    [SerializeField] PlayerSwitcher _playerSwitcher;
+    [SerializeField] GameManager _manager;
+    Animator _anim;
+    [SerializeField] GameObject _score;
+    [SerializeField] GameObject _text;
+    public void Start()
+    {
+        StartCoroutine(Move());
+        _anim = GetComponent<Animator>();
+        _animHP = GetComponent<AnimationHPBar>();
+        _animHP.SetPlayer(this);
+    }
+
+    IEnumerator Move()
    {
+        Debug.Log("Movement");
         var prevPointPos = transform.position;
         var basePosition = transform.position;
         var movedPos = Vector2.zero;
 
-        foreach(var nextPoint in RoutePoints)
+        foreach (var nextPoint in RoutePoints)
         {
             _isHitRoutePoint = false;
             while (!_isHitRoutePoint)
@@ -53,7 +70,7 @@ public class PlayerController : MonoBehaviour
                 //ルート上の位置に上下左右の移動量を加えている
                 transform.position = basePosition + worldMovePos;
 
-                //次の処理では進行方向を向くように計算している
+            //次の処理では進行方向を向くように計算している
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(vec, Vector3.up), 0.1f);
 
                 yield return null;
@@ -72,23 +89,24 @@ public class PlayerController : MonoBehaviour
         }
         else if (collider.gameObject.tag == "Enemy" || collider.gameObject.tag == "EnemyBullet")
         {
+            StartCoroutine(Animation());
             _animHP.GaugeReduction(10);
             _Life -= 10f;
 
             collider.gameObject.SetActive(false);
             Destroy(collider.gameObject);
-
             if (_Life <= 0)
             {
                 Camera.main.transform.SetParent(null);
                 gameObject.SetActive(false);
-                var sceneManager = FindObjectOfType<GameManager>();
-                sceneManager.ShowGameOver();
+                _score.SetActive(false);
+                _text.SetActive(false);
+                _manager.ShowGameOver();
             }
         }
 
         if (collider.gameObject.tag == "BackGround")
-        {   
+        {
             _animHP.GaugeReduction(10);
             _Life = 0;
 
@@ -98,21 +116,15 @@ public class PlayerController : MonoBehaviour
                 _animHP.GreenGauge.gameObject.SetActive(false);
                 _animHP.RedGauge.gameObject.SetActive(false);
                 gameObject.SetActive(false);
-                var sceneManager = FindObjectOfType<GameManager>();
-                sceneManager.ShowGameOver();
+                _score.SetActive(false);
+                _text.SetActive(false);
+                _manager.ShowGameOver();
             }
         }
-    }
-    void Start()
-    {
-        StartCoroutine(Move());
-        _animHP = GetComponent<AnimationHPBar>();
-        _animHP.SetPlayer(this);
     }
 
     void Update()
     {
-
         if (count == 6)
         {
             float x = Input.GetAxis("Horizontal") * MoveSpeed * Time.deltaTime;
@@ -125,11 +137,18 @@ public class PlayerController : MonoBehaviour
             currentPos.z = Mathf.Clamp(currentPos.z, Zlimit, Zlimit);
 
             transform.position = currentPos;
-        }  
+        }
     }
     public void ShotBullet(Vector3 targetpos)
     {
         var bullet = Instantiate(bulletpre, transform.position, Quaternion.identity);
         bullet.Init(transform.position, targetpos);
+    }
+
+    IEnumerator Animation()
+    {
+        _anim.SetBool("Damage", true);
+        yield return new WaitForSeconds(1.0f);
+        _anim.SetBool("Damage", false);
     }
 }
